@@ -71,9 +71,14 @@ void main() {
     });
 
     test('sin aviso diario o sin días no hay próximo', () {
-      expect(base.copyWith(dailyOutfit: false).nextFire(DateTime(2026, 10, 12)), isNull);
       expect(
-        base.copyWith(days: List.filled(7, false)).nextFire(DateTime(2026, 10, 12)),
+        base.copyWith(dailyOutfit: false).nextFire(DateTime(2026, 10, 12)),
+        isNull,
+      );
+      expect(
+        base
+            .copyWith(days: List.filled(7, false))
+            .nextFire(DateTime(2026, 10, 12)),
         isNull,
       );
     });

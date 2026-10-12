@@ -65,18 +65,18 @@ class Garment {
 
   /// Fila con los nombres de columna de la tabla `garments`.
   Map<String, dynamic> toRow() => {
-        'id': id,
-        'user_id': userId,
-        'name': name,
-        'category': category.name,
-        'style': style.name,
-        'color_name': color.name,
-        'color_value': color.value,
-        'image_url': imageUrl,
-        'wear_count': wearCount,
-        'last_worn_at': lastWornAt?.toUtc().toIso8601String(),
-        'created_at': createdAt.toUtc().toIso8601String(),
-      };
+    'id': id,
+    'user_id': userId,
+    'name': name,
+    'category': category.name,
+    'style': style.name,
+    'color_name': color.name,
+    'color_value': color.value,
+    'image_url': imageUrl,
+    'wear_count': wearCount,
+    'last_worn_at': lastWornAt?.toUtc().toIso8601String(),
+    'created_at': createdAt.toUtc().toIso8601String(),
+  };
 
   factory Garment.fromRow(Map<String, dynamic> row) {
     final colorValue = (row['color_value'] as num?)?.toInt() ?? 0xFF808080;
@@ -86,7 +86,10 @@ class Garment {
       name: row['name'] as String? ?? 'Prenda',
       category: GarmentCategory.fromName(row['category'] as String?),
       style: GarmentStyle.fromName(row['style'] as String?),
-      color: GarmentPalette.fromValue(colorValue, name: row['color_name'] as String?),
+      color: GarmentPalette.fromValue(
+        colorValue,
+        name: row['color_name'] as String?,
+      ),
       imageUrl: row['image_url'] as String?,
       wearCount: (row['wear_count'] as num?)?.toInt() ?? 0,
       lastWornAt: _parseDate(row['last_worn_at']),

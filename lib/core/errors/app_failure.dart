@@ -17,7 +17,8 @@ class AuthFailure extends AppFailure {
 
 class NetworkFailure extends AppFailure {
   const NetworkFailure([
-    super.message = 'No pudimos conectarnos. Revisa tu internet e intenta de nuevo.',
+    super.message =
+        'No pudimos conectarnos. Revisa tu internet e intenta de nuevo.',
   ]);
 }
 
