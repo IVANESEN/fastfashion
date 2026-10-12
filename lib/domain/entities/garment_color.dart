@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 /// Color con nombre de la paleta de prendas.
 ///
 /// El valor se guarda como ARGB entero para mantener el dominio libre de
@@ -14,6 +16,27 @@ class GarmentColor {
   int get red => (value >> 16) & 0xFF;
   int get green => (value >> 8) & 0xFF;
   int get blue => value & 0xFF;
+
+  /// Matiz HSL en grados (0–360). No es significativo para grises.
+  double get hue {
+    final r = red / 255;
+    final g = green / 255;
+    final b = blue / 255;
+    final maxC = math.max(r, math.max(g, b));
+    final minC = math.min(r, math.min(g, b));
+    final d = maxC - minC;
+    if (d == 0) return 0;
+    double h;
+    if (maxC == r) {
+      h = ((g - b) / d) % 6;
+    } else if (maxC == g) {
+      h = (b - r) / d + 2;
+    } else {
+      h = (r - g) / d + 4;
+    }
+    h *= 60;
+    return h < 0 ? h + 360 : h;
+  }
 
   @override
   bool operator ==(Object other) =>
