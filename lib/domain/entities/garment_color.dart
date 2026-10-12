@@ -63,7 +63,14 @@ abstract final class GarmentPalette {
   ];
 
   /// Los seis colores del filtro rápido "Por color" del clóset.
-  static const quickFilter = <GarmentColor>[blue, black, beige, white, lilac, brown];
+  static const quickFilter = <GarmentColor>[
+    blue,
+    black,
+    beige,
+    white,
+    lilac,
+    brown,
+  ];
 
   static GarmentColor byName(String name) {
     return all.firstWhere(
@@ -94,7 +101,10 @@ abstract final class GarmentPalette {
       final dr = (r - c.red).toDouble();
       final dg = (g - c.green).toDouble();
       final db = (b - c.blue).toDouble();
-      final d = (2 + rMean / 256) * dr * dr + 4 * dg * dg + (2 + (255 - rMean) / 256) * db * db;
+      final d =
+          (2 + rMean / 256) * dr * dr +
+          4 * dg * dg +
+          (2 + (255 - rMean) / 256) * db * db;
       if (d < bestDistance) {
         bestDistance = d;
         best = c;

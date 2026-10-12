@@ -69,18 +69,18 @@ class OutfitRecord {
   List<String> get garmentIds => [topId, bottomId, ?shoesId, ?jacketId];
 
   Map<String, dynamic> toRow() => {
-        'id': id,
-        'user_id': userId,
-        'outfit_date': date,
-        'top_id': topId,
-        'bottom_id': bottomId,
-        'shoes_id': shoesId,
-        'jacket_id': jacketId,
-        'title': title,
-        'occasion': occasion.name,
-        'style': style.name,
-        'created_at': createdAt.toUtc().toIso8601String(),
-      };
+    'id': id,
+    'user_id': userId,
+    'outfit_date': date,
+    'top_id': topId,
+    'bottom_id': bottomId,
+    'shoes_id': shoesId,
+    'jacket_id': jacketId,
+    'title': title,
+    'occasion': occasion.name,
+    'style': style.name,
+    'created_at': createdAt.toUtc().toIso8601String(),
+  };
 
   factory OutfitRecord.fromRow(Map<String, dynamic> row) {
     return OutfitRecord(
@@ -94,7 +94,9 @@ class OutfitRecord {
       title: row['title'] as String? ?? 'Outfit',
       occasion: Occasion.fromName(row['occasion'] as String?),
       style: GarmentStyle.fromName(row['style'] as String?),
-      createdAt: DateTime.tryParse(row['created_at'] as String? ?? '')?.toLocal() ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(row['created_at'] as String? ?? '')?.toLocal() ??
+          DateTime.now(),
     );
   }
 }

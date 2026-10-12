@@ -43,7 +43,8 @@ class UserProfile {
   final City city;
   final DateTime createdAt;
 
-  String get initial => displayName.trim().isEmpty ? '?' : displayName.trim()[0].toUpperCase();
+  String get initial =>
+      displayName.trim().isEmpty ? '?' : displayName.trim()[0].toUpperCase();
 
   String get firstName {
     final parts = displayName.trim().split(RegExp(r'\s+'));
@@ -61,12 +62,12 @@ class UserProfile {
   }
 
   Map<String, dynamic> toRow() => {
-        'id': id,
-        'email': email,
-        'display_name': displayName,
-        'city': city.name,
-        'created_at': createdAt.toUtc().toIso8601String(),
-      };
+    'id': id,
+    'email': email,
+    'display_name': displayName,
+    'city': city.name,
+    'created_at': createdAt.toUtc().toIso8601String(),
+  };
 
   factory UserProfile.fromRow(Map<String, dynamic> row) {
     return UserProfile(
@@ -74,7 +75,9 @@ class UserProfile {
       email: row['email'] as String? ?? '',
       displayName: row['display_name'] as String? ?? '',
       city: City.byName(row['city'] as String?),
-      createdAt: DateTime.tryParse(row['created_at'] as String? ?? '')?.toLocal() ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(row['created_at'] as String? ?? '')?.toLocal() ??
+          DateTime.now(),
     );
   }
 }

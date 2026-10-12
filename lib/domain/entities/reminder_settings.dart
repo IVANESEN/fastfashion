@@ -44,10 +44,16 @@ class ReminderSettings {
   DateTime? nextFire(DateTime from) {
     if (!dailyOutfit || !hasAnyDay) return null;
     for (var offset = 0; offset <= 7; offset++) {
-      final day = DateTime(from.year, from.month, from.day).add(Duration(days: offset));
+      final day = DateTime(
+        from.year,
+        from.month,
+        from.day,
+      ).add(Duration(days: offset));
       final candidate = DateTime(day.year, day.month, day.day, hour, minute);
       // DateTime.weekday: lunes = 1 … domingo = 7
-      if (days[candidate.weekday - 1] && candidate.isAfter(from)) return candidate;
+      if (days[candidate.weekday - 1] && candidate.isAfter(from)) {
+        return candidate;
+      }
     }
     return null;
   }
@@ -72,14 +78,14 @@ class ReminderSettings {
   }
 
   Map<String, dynamic> toRow() => {
-        'user_id': userId,
-        'hour': hour,
-        'minute': minute,
-        'days': days,
-        'daily_outfit': dailyOutfit,
-        'weather_change': weatherChange,
-        'smart_alerts': smartAlerts,
-      };
+    'user_id': userId,
+    'hour': hour,
+    'minute': minute,
+    'days': days,
+    'daily_outfit': dailyOutfit,
+    'weather_change': weatherChange,
+    'smart_alerts': smartAlerts,
+  };
 
   factory ReminderSettings.fromRow(Map<String, dynamic> row) {
     final rawDays = row['days'];
