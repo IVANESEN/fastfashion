@@ -27,7 +27,8 @@ class AuthFormScaffold extends StatelessWidget {
     final horizontal = MediaQuery.sizeOf(context).width < 360 ? 16.0 : 24.0;
     return Scaffold(
       body: SafeArea(
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
             child: SingleChildScrollView(

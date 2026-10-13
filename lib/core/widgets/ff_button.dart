@@ -110,12 +110,18 @@ class FfButton extends StatelessWidget {
           child: InkWell(
             customBorder: const StadiumBorder(),
             onTap: enabled ? onPressed : null,
-            child: Container(
-              height: height,
+            child: ConstrainedBox(
               constraints: const BoxConstraints(minWidth: 48),
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              alignment: Alignment.center,
-              child: content,
+              child: SizedBox(
+                height: height,
+                child: Center(
+                  widthFactor: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 22),
+                    child: content,
+                  ),
+                ),
+              ),
             ),
           ),
         ),

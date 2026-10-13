@@ -11,6 +11,7 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/ff_button.dart';
 import '../../core/widgets/ff_chip.dart';
 import '../../core/widgets/ff_icon_button.dart';
+import '../../core/widgets/horizontal_scroller.dart';
 import '../../domain/entities/occasion.dart';
 import '../../domain/entities/weather_snapshot.dart';
 import '../auth/auth_controller.dart';
@@ -49,7 +50,11 @@ class TodayScreen extends StatelessWidget {
       const SizedBox(height: 16),
       _WeatherCard(weather: weather),
       const SizedBox(height: 14),
-      _OccasionChips(selected: today.occasion, onSelect: today.setOccasion),
+      _OccasionChips(
+        selected: today.occasion,
+        onSelect: today.setOccasion,
+        pad: pad,
+      ),
       const SizedBox(height: 16),
     ];
 
@@ -127,8 +132,16 @@ class TodayScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 560),
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(pad, 0, pad, 24),
-              children: children,
+              padding: const EdgeInsets.only(bottom: 24),
+              children: [
+                for (final w in children)
+                  w is _OccasionChips
+                      ? w
+                      : Padding(
+                          padding: EdgeInsets.symmetric(horizontal: pad),
+                          child: w,
+                        ),
+              ],
             ),
           ),
         ),
@@ -254,27 +267,28 @@ class _WeatherCard extends StatelessWidget {
 }
 
 class _OccasionChips extends StatelessWidget {
-  const _OccasionChips({required this.selected, required this.onSelect});
+  const _OccasionChips({
+    required this.selected,
+    required this.onSelect,
+    required this.pad,
+  });
 
   final Occasion selected;
   final ValueChanged<Occasion> onSelect;
+  final double pad;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (final o in Occasion.values) ...[
-            FfChip(
-              label: o.label,
-              selected: selected == o,
-              onTap: () => onSelect(o),
-            ),
-            const SizedBox(width: 8),
-          ],
-        ],
-      ),
+    return HorizontalScroller(
+      padding: EdgeInsets.symmetric(horizontal: pad),
+      children: [
+        for (final o in Occasion.values)
+          FfChip(
+            label: o.label,
+            selected: selected == o,
+            onTap: () => onSelect(o),
+          ),
+      ],
     );
   }
 }

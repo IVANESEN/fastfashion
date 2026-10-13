@@ -50,18 +50,26 @@ class FfChip extends StatelessWidget {
         child: InkWell(
           customBorder: const StadiumBorder(),
           onTap: onTap,
-          child: Container(
+          // `Center(widthFactor: 1)` ajusta el ancho al texto; un `Container`
+          // con `alignment` se estiraría a todo el ancho dentro de un Wrap.
+          child: SizedBox(
             height: height,
-            padding: EdgeInsets.symmetric(horizontal: height >= 40 ? 16 : 14),
-            alignment: Alignment.center,
-            child: Text(
-              label,
-              maxLines: 1,
-              style: TextStyle(
-                fontFamily: 'Lato',
-                fontWeight: FontWeight.w700,
-                fontSize: height >= 40 ? 14 : 13,
-                color: fg,
+            child: Center(
+              widthFactor: 1,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: height >= 40 ? 16 : 14,
+                ),
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontFamily: 'Lato',
+                    fontWeight: FontWeight.w700,
+                    fontSize: height >= 40 ? 14 : 13,
+                    color: fg,
+                  ),
+                ),
               ),
             ),
           ),

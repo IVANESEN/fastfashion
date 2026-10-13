@@ -12,6 +12,7 @@ import 'package:fastfashion/domain/services/outfit_engine.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final _now = DateTime(2026, 10, 12, 8);
+final testNow = _now;
 
 var _n = 0;
 Garment g(
@@ -279,6 +280,14 @@ void main() {
       final r = ask('algo para la lluvia', w: weather(rain: 70));
       expect(r.text, contains('4 p.m.'));
       expect(r.options.first.shoes!.name, 'Tenis blancos');
+    });
+
+    test('con lluvia no propone una segunda opción claramente peor', () {
+      final r = ask('camisa azul con pantalón blanco', w: weather(rain: 80));
+      expect(r.options, isNotEmpty);
+      for (final o in r.options) {
+        expect(o.shoes?.name.toLowerCase(), isNot(contains('sandalia')));
+      }
     });
 
     test('chip "más formal" conserva colores previos y cambia estilo', () {

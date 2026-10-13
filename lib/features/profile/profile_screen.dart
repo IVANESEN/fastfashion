@@ -199,7 +199,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _Stat(label: 'Ciudad', value: user.city.name),
+                      child: _Stat(
+                        label: 'Prendas usadas',
+                        value:
+                            '${closet.garments.where((g) => g.wearCount > 0).length}',
+                      ),
                     ),
                   ],
                 ),
