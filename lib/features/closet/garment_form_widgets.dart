@@ -71,13 +71,17 @@ class GarmentPhotoPanel extends StatelessWidget {
     }
 
     final detected = draft.detectedColor;
-    final String chipText;
+    final String? chipText;
     if (draft.detecting) {
       chipText = 'Detectando color…';
     } else if (detected != null) {
       chipText = 'Color detectado: ${detected.name.toLowerCase()}';
+    } else if (!draft.hasPhoto) {
+      chipText = draft.isNew
+          ? 'Sube una foto y detectamos el color'
+          : 'Agrega una foto de esta prenda';
     } else {
-      chipText = 'Sube una foto y detectamos el color';
+      chipText = null; // prenda existente con foto: sin etiqueta
     }
 
     return AspectRatio(
@@ -90,48 +94,49 @@ class GarmentPhotoPanel extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               visual,
-              Positioned(
-                top: 14,
-                left: 14,
-                right: 70,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.auto_awesome_rounded,
-                          size: 14,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            chipText,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontFamily: 'Lato',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
-                              color: AppColors.primary,
+              if (chipText != null)
+                Positioned(
+                  top: 14,
+                  left: 14,
+                  right: 70,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.auto_awesome_rounded,
+                            size: 14,
+                            color: AppColors.primary,
+                          ),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              chipText,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontFamily: 'Lato',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
               Positioned(
                 right: 14,
                 bottom: 14,

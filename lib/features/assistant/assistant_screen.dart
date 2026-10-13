@@ -9,6 +9,7 @@ import '../../core/theme/app_text.dart';
 import '../../core/widgets/ff_button.dart';
 import '../../core/widgets/ff_chip.dart';
 import '../../core/widgets/ff_icon_button.dart';
+import '../../core/widgets/horizontal_scroller.dart';
 import '../../core/widgets/garment_illustration.dart';
 import '../../domain/entities/garment.dart';
 import '../../domain/entities/outfit.dart';
@@ -148,22 +149,18 @@ class _AssistantScreenState extends State<AssistantScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(pad, 4, pad, 0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (final q in AssistantController.quickReplies) ...[
-                        FfChip(
-                          label: q,
-                          outlined: true,
-                          onTap: assistant.thinking ? null : () => _send(q),
-                          selected: false,
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ],
-                  ),
+                padding: const EdgeInsets.only(top: 4),
+                child: HorizontalScroller(
+                  padding: EdgeInsets.symmetric(horizontal: pad),
+                  children: [
+                    for (final q in AssistantController.quickReplies)
+                      FfChip(
+                        label: q,
+                        outlined: true,
+                        onTap: assistant.thinking ? null : () => _send(q),
+                        selected: false,
+                      ),
+                  ],
                 ),
               ),
               Padding(

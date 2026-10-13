@@ -178,7 +178,8 @@ class OutfitEngine {
       if (shoes != null) {
         final name = shoes.name.toLowerCase();
         if (name.contains('sandalia') || name.contains('chancla')) {
-          score -= 3;
+          // Casi descarte: las sandalias bajo la lluvia no son una opción.
+          score -= 6;
         } else if (shoes.style == GarmentStyle.sporty) {
           score += 1.5;
           reasons.add('Los ${_shoeNoun(shoes)} aguantan mejor el agua');

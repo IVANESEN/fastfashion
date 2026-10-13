@@ -90,6 +90,9 @@ class AssistantEngine {
 
   final OutfitEngine engine;
 
+  /// Diferencia máxima de puntaje respecto a la mejor opción para mostrarla.
+  static const _maxScoreGap = 3.5;
+
   // ---- Léxico (tokens ya normalizados: minúsculas y sin acentos) ----------
 
   static const _colorWords = <String, GarmentColor>{
@@ -363,6 +366,17 @@ class AssistantEngine {
     }
     if (looseMissing) {
       missing.add('prenda ${loose!.name.toLowerCase()}');
+    }
+
+    // Mejor una sola opción buena que una segunda claramente peor (p. ej.
+    // sandalias bajo la lluvia solo porque era la otra combinación posible).
+    if (proposals.length > 1) {
+      final best = proposals
+          .map((p) => p.score)
+          .reduce((a, b) => a > b ? a : b);
+      proposals = proposals
+          .where((p) => p.score >= best - _maxScoreGap)
+          .toList();
     }
 
     if (proposals.isEmpty) {

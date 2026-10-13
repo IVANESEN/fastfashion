@@ -10,6 +10,7 @@ import '../../core/widgets/color_dot.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/ff_chip.dart';
 import '../../core/widgets/ff_icon_button.dart';
+import '../../core/widgets/horizontal_scroller.dart';
 import '../../domain/entities/garment_category.dart';
 import '../../domain/entities/garment_style.dart';
 import 'closet_controller.dart';
@@ -82,7 +83,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
         onClear: () => closet.setQuery(''),
       ),
       const SizedBox(height: 14),
-      _HorizontalChips(
+      HorizontalScroller(
+        padding: EdgeInsets.symmetric(horizontal: pad),
         children: [
           FfChip(
             label: 'Todo',
@@ -98,7 +100,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
         ],
       ),
       const SizedBox(height: 10),
-      _HorizontalChips(
+      HorizontalScroller(
+        padding: EdgeInsets.symmetric(horizontal: pad),
         children: [
           FfChip(
             label: 'Todos',
@@ -119,7 +122,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
       ),
       if (closet.availableColors.isNotEmpty) ...[
         const SizedBox(height: 14),
-        _HorizontalChips(
+        HorizontalScroller(
+          padding: EdgeInsets.symmetric(horizontal: pad),
           spacing: 6,
           children: [
             for (final c in closet.availableColors)
@@ -221,9 +225,16 @@ class _ClosetScreenState extends State<ClosetScreen> {
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: pad),
-              sliver: SliverList.list(children: header),
+            SliverList.list(
+              children: [
+                for (final w in header)
+                  w is HorizontalScroller
+                      ? w
+                      : Padding(
+                          padding: EdgeInsets.symmetric(horizontal: pad),
+                          child: w,
+                        ),
+              ],
             ),
             SliverPadding(
               padding: EdgeInsets.fromLTRB(pad, 0, pad, 24),
@@ -284,28 +295,6 @@ class _SearchField extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
-      ),
-    );
-  }
-}
-
-class _HorizontalChips extends StatelessWidget {
-  const _HorizontalChips({required this.children, this.spacing = 8});
-
-  final List<Widget> children;
-  final double spacing;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) SizedBox(width: spacing),
-            children[i],
-          ],
-        ],
       ),
     );
   }
