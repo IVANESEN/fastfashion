@@ -6,17 +6,11 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/errors/app_failure.dart';
 import '../../core/validation/validators.dart';
+import '../../domain/entities/demo_account.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/repositories/repositories.dart';
 import '../datasource/database_client.dart';
 import 'key_value_store.dart';
-
-/// Cuenta de demostración que se crea en la base local.
-abstract final class DemoAccount {
-  static const email = 'ana@fastfashion.app';
-  static const password = 'fastfashion';
-  static const name = 'Ana Martínez';
-}
 
 /// Autenticación sobre la base local.
 ///
