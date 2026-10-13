@@ -9,6 +9,7 @@ import 'package:fastfashion/data/repositories/db_garment_repository.dart';
 import 'package:fastfashion/data/repositories/db_outfit_repository.dart';
 import 'package:fastfashion/data/repositories/db_reminder_repository.dart';
 import 'package:fastfashion/data/weather/open_meteo_weather_repository.dart';
+import 'package:fastfashion/domain/entities/demo_account.dart';
 import 'package:fastfashion/domain/entities/garment_category.dart';
 import 'package:fastfashion/domain/entities/garment_color.dart';
 import 'package:fastfashion/domain/entities/garment_style.dart';
