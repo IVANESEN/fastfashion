@@ -9,6 +9,7 @@ import 'package:fastfashion/features/assistant/assistant_controller.dart';
 import 'package:fastfashion/features/auth/auth_controller.dart';
 import 'package:fastfashion/features/closet/closet_controller.dart';
 import 'package:fastfashion/features/closet/photo_picker.dart';
+import 'package:fastfashion/features/reminders/reminders_controller.dart';
 import 'package:fastfashion/features/today/today_controller.dart';
 import 'package:fastfashion/features/today/weather_controller.dart';
 import 'package:provider/provider.dart';
@@ -79,6 +80,7 @@ class TestApp {
     required this.weather,
     required this.today,
     required this.assistant,
+    required this.reminders,
     required this.picker,
     required this.weatherRepo,
   });
@@ -89,6 +91,7 @@ class TestApp {
   final WeatherController weather;
   final TodayController today;
   final AssistantController assistant;
+  final RemindersController reminders;
   final FakePhotoPicker picker;
   final FakeWeatherRepository weatherRepo;
 
@@ -134,6 +137,12 @@ class TestApp {
     );
     // Deja que `_restoreToday` termine.
     await settle();
+    final reminders = RemindersController(
+      repository: backend.reminders,
+      auth: auth,
+      clock: () => kTestNow,
+    );
+    await settle();
     final assistant = AssistantController(
       closet: closet,
       weather: weather,
@@ -149,6 +158,7 @@ class TestApp {
       weather: weather,
       today: today,
       assistant: assistant,
+      reminders: reminders,
       picker: FakePhotoPicker(),
       weatherRepo: repo,
     );
@@ -160,10 +170,12 @@ class TestApp {
     ChangeNotifierProvider<WeatherController>.value(value: weather),
     ChangeNotifierProvider<TodayController>.value(value: today),
     ChangeNotifierProvider<AssistantController>.value(value: assistant),
+    ChangeNotifierProvider<RemindersController>.value(value: reminders),
     Provider<PhotoPicker>.value(value: picker),
   ];
 
   void dispose() {
+    reminders.dispose();
     assistant.dispose();
     today.dispose();
     weather.dispose();

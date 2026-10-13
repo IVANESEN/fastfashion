@@ -14,7 +14,9 @@ import '../../core/widgets/ff_icon_button.dart';
 import '../../domain/entities/occasion.dart';
 import '../../domain/entities/weather_snapshot.dart';
 import '../auth/auth_controller.dart';
+import '../../domain/services/smart_alerts.dart';
 import '../closet/closet_controller.dart';
+import '../reminders/reminders_controller.dart';
 import 'outfit_board.dart';
 import 'today_controller.dart';
 import 'weather_controller.dart';
@@ -32,6 +34,7 @@ class TodayScreen extends StatelessWidget {
     final today = context.watch<TodayController>();
     final weather = context.watch<WeatherController>();
     final closet = context.watch<ClosetController>();
+    final reminders = context.watch<RemindersController>();
     final pad = context.pagePadding;
     final user = auth.user;
 
@@ -82,6 +85,32 @@ class TodayScreen extends StatelessWidget {
           ),
         );
       case TodayStatus.ready:
+        final alerts = SmartAlerts.evaluate(
+          now: clock(),
+          settings: reminders.settings,
+          weather: weather.snapshot,
+          chosen: today.usedToday ? today.current : null,
+          closet: closet.garments,
+          dismissed: today.dismissedAlerts,
+        );
+        for (final alert in alerts) {
+          children
+            ..add(
+              _AlertBanner(
+                alert: alert,
+                onAction: () {
+                  today.dismissAlert(alert.kind);
+                  if (alert.kind == AlertKind.smart) {
+                    today.setOccasion(Occasion.sport);
+                  } else {
+                    today.next();
+                  }
+                },
+                onDismiss: () => today.dismissAlert(alert.kind),
+              ),
+            )
+            ..add(const SizedBox(height: 12));
+        }
         children.add(_OutfitSection(today: today));
     }
 
@@ -393,6 +422,73 @@ class _OutfitSection extends StatelessWidget {
           ok
               ? '¡Listo! Este es tu outfit de hoy.'
               : (today.error ?? 'No pudimos guardar el outfit.'),
+        ),
+      ),
+    );
+  }
+}
+
+class _AlertBanner extends StatelessWidget {
+  const _AlertBanner({
+    required this.alert,
+    required this.onAction,
+    required this.onDismiss,
+  });
+
+  final OutfitAlert alert;
+  final VoidCallback onAction;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 4, 8),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.primary, width: 2),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(
+                    Icons.notifications_active_outlined,
+                    size: 20,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(child: Text(alert.message, style: AppText.body)),
+                FfIconButton(
+                  icon: Icons.close_rounded,
+                  label: 'Cerrar aviso',
+                  background: Colors.transparent,
+                  onPressed: onDismiss,
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 4, right: 12),
+                child: FfButton(
+                  label: alert.actionLabel,
+                  style: FfButtonStyle.tonal,
+                  expand: false,
+                  height: 44,
+                  onPressed: onAction,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

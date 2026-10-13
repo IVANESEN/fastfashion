@@ -6,6 +6,7 @@ import '../../domain/entities/garment.dart';
 import '../../domain/entities/occasion.dart';
 import '../../domain/entities/outfit.dart';
 import '../../domain/repositories/repositories.dart';
+import '../../domain/services/smart_alerts.dart';
 import '../../domain/services/outfit_engine.dart';
 import '../auth/auth_controller.dart';
 import '../closet/closet_controller.dart';
@@ -59,6 +60,7 @@ class TodayController extends ChangeNotifier {
   bool _restoring = false;
   String? _error;
   String? _lastWeatherKey;
+  final Set<AlertKind> _dismissedAlerts = {};
 
   Occasion get occasion => _occasion;
   OutfitProposal? get current => _proposals.isEmpty ? null : _proposals[_index];
@@ -66,6 +68,9 @@ class TodayController extends ChangeNotifier {
   int get optionCount => _proposals.length;
   Duration get generatedIn => _elapsed;
   bool get saving => _saving;
+
+  /// Avisos que el usuario cerró en esta sesión.
+  Set<AlertKind> get dismissedAlerts => Set.unmodifiable(_dismissedAlerts);
   String? get error => _error;
 
   /// ¿El outfit mostrado es el que el usuario ya eligió para hoy?
@@ -86,6 +91,11 @@ class TodayController extends ChangeNotifier {
   }
 
   // ---- Acciones -------------------------------------------------------------
+
+  void dismissAlert(AlertKind kind) {
+    _dismissedAlerts.add(kind);
+    notifyListeners();
+  }
 
   void setOccasion(Occasion value) {
     if (_occasion == value) return;
@@ -273,6 +283,7 @@ class TodayController extends ChangeNotifier {
     _index = 0;
     _record = null;
     _seed = 0;
+    _dismissedAlerts.clear();
     notifyListeners();
     if (next != null) _restoreToday();
   }
