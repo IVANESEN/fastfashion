@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, 'feature/**', 'fix/**', 'chore/**', 'docs/**', 'ci/**']
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Analizar, probar y compilar
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.2
+          cache: true
+
+      - name: Dependencias
+        run: flutter pub get
+
+      - name: Formato
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Análisis estático
+        run: flutter analyze --fatal-infos
+
+      - name: Pruebas
+        run: flutter test --reporter expanded
+
+      - name: Compilar web (humo)
+        run: flutter build web --release --base-href /fastfashion/
