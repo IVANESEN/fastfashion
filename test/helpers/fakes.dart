@@ -5,6 +5,7 @@ import 'package:fastfashion/domain/entities/demo_account.dart';
 import 'package:fastfashion/domain/entities/user_profile.dart';
 import 'package:fastfashion/domain/entities/weather_snapshot.dart';
 import 'package:fastfashion/domain/repositories/repositories.dart';
+import 'package:fastfashion/features/assistant/assistant_controller.dart';
 import 'package:fastfashion/features/auth/auth_controller.dart';
 import 'package:fastfashion/features/closet/closet_controller.dart';
 import 'package:fastfashion/features/closet/photo_picker.dart';
@@ -77,6 +78,7 @@ class TestApp {
     required this.closet,
     required this.weather,
     required this.today,
+    required this.assistant,
     required this.picker,
     required this.weatherRepo,
   });
@@ -86,6 +88,7 @@ class TestApp {
   final ClosetController closet;
   final WeatherController weather;
   final TodayController today;
+  final AssistantController assistant;
   final FakePhotoPicker picker;
   final FakeWeatherRepository weatherRepo;
 
@@ -131,12 +134,21 @@ class TestApp {
     );
     // Deja que `_restoreToday` termine.
     await settle();
+    final assistant = AssistantController(
+      closet: closet,
+      weather: weather,
+      today: today,
+      auth: auth,
+      replyDelay: Duration.zero,
+      clock: () => kTestNow,
+    );
     return TestApp._(
       backend: backend,
       auth: auth,
       closet: closet,
       weather: weather,
       today: today,
+      assistant: assistant,
       picker: FakePhotoPicker(),
       weatherRepo: repo,
     );
@@ -147,10 +159,12 @@ class TestApp {
     ChangeNotifierProvider<ClosetController>.value(value: closet),
     ChangeNotifierProvider<WeatherController>.value(value: weather),
     ChangeNotifierProvider<TodayController>.value(value: today),
+    ChangeNotifierProvider<AssistantController>.value(value: assistant),
     Provider<PhotoPicker>.value(value: picker),
   ];
 
   void dispose() {
+    assistant.dispose();
     today.dispose();
     weather.dispose();
     closet.dispose();
