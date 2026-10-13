@@ -172,6 +172,7 @@ class TestApp {
     ChangeNotifierProvider<AssistantController>.value(value: assistant),
     ChangeNotifierProvider<RemindersController>.value(value: reminders),
     Provider<PhotoPicker>.value(value: picker),
+    Provider<AppBackend>.value(value: backend),
   ];
 
   void dispose() {
